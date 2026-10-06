@@ -14,7 +14,7 @@ modelo_ia = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai"
 )
 
-st.title("# Chatbot de IA")
+st.title("Chatbot de IA")
 
 # criar historico de mensagens
 if "lista_mensagens" not in st.session_state:
@@ -57,8 +57,6 @@ if mensagem_usuario:
 
     # pegar somente o texto da resposta
     resposta_modelo = resposta_ia.choices[0].message.content
-
-    print(resposta_modelo)
 
 
     # enviar a resposta da IA no chat

@@ -20,6 +20,11 @@ st.title("Chatbot de IA")
 if "lista_mensagens" not in st.session_state:
     st.session_state.lista_mensagens = []
 
+# barra lateral com botao de limpar conversa
+with st.sidebar:
+    if st.button("Limpar conversa"):
+        st.session_state["lista_mensagens"] = []
+
 
 mensagem_usuario = st.chat_input("Escreva sua mensagem aqui")
 

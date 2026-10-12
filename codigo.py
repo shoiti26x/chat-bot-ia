@@ -32,9 +32,9 @@ mensagem_usuario = st.chat_input("Escreva sua mensagem aqui")
 # mostrar historico de mensagens
 for mensagem in st.session_state["lista_mensagens"]:
     quem_enviou = mensagem["role"]
-    texto_mensgem = mensagem["content"]
+    texto_mensagem = mensagem["content"]
 
-    st.chat_message(quem_enviou).write(texto_mensgem)
+    st.chat_message(quem_enviou).write(texto_mensagem)
 
 
 if mensagem_usuario:

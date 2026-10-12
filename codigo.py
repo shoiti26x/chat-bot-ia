@@ -54,10 +54,17 @@ if mensagem_usuario:
 
 
     # pegar a resposta da IA
-    resposta_ia = modelo_ia.chat.completions.create(
-        messages=st.session_state["lista_mensagens"],
-        model="gemini-flash-lite-latest"
-    )
+    try:
+        resposta_ia = modelo_ia.chat.completions.create(
+            messages=st.session_state["lista_mensagens"],
+            model="gemini-flash-lite-latest"
+        )
+    except Exception as erro:
+        # tira a mensagem do usuario do historico para ele poder tentar de novo
+        st.session_state["lista_mensagens"].pop()
+        st.error("Não consegui falar com a IA agora. Tente de novo em alguns segundos.")
+        st.caption(f"Detalhe do erro: {erro}")
+        st.stop()
 
 
     # pegar somente o texto da resposta

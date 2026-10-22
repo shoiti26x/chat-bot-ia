@@ -14,6 +14,14 @@ modelo_ia = OpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai"
 )
 
+
+def pedacos_de_texto(resposta_ia):
+    # devolve so o texto de cada pedaco da resposta, conforme ele chega
+    for pedaco in resposta_ia:
+        if pedaco.choices and pedaco.choices[0].delta.content:
+            yield pedaco.choices[0].delta.content
+
+
 st.title("Chatbot de IA")
 
 # criar historico de mensagens
@@ -53,12 +61,16 @@ if mensagem_usuario:
     st.session_state["lista_mensagens"].append(mensagem1)
 
 
-    # pegar a resposta da IA
+    # pegar a resposta da IA em streaming e mostrar no chat conforme ela chega
     try:
         resposta_ia = modelo_ia.chat.completions.create(
             messages=st.session_state["lista_mensagens"],
-            model="gemini-flash-lite-latest"
+            model="gemini-flash-lite-latest",
+            stream=True
         )
+
+        with st.chat_message("assistant"):
+            resposta_modelo = st.write_stream(pedacos_de_texto(resposta_ia))
     except Exception as erro:
         # tira a mensagem do usuario do historico para ele poder tentar de novo
         st.session_state["lista_mensagens"].pop()
@@ -66,13 +78,6 @@ if mensagem_usuario:
         st.caption(f"Detalhe do erro: {erro}")
         st.stop()
 
-
-    # pegar somente o texto da resposta
-    resposta_modelo = resposta_ia.choices[0].message.content
-
-
-    # enviar a resposta da IA no chat
-    st.chat_message("assistant").write(resposta_modelo)
 
     mensagem2 = {
         "role": "assistant",

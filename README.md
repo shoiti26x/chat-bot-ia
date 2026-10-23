@@ -27,6 +27,8 @@ O histórico das mensagens é mantido durante a sessão para que a conversa tenh
 - 🧠 Histórico de mensagens durante a sessão
 - 🧹 Botão para limpar a conversa
 - ⚠️ Mensagem amigável quando a API falha
+- ⚡ Respostas em streaming (o texto aparece em tempo real, conforme é gerado)
+- 🎭 Personalidade configurável por meio de uma mensagem de sistema
 - 🔌 Integração com Google Gemini
 - 🔐 Proteção da API Key utilizando `st.secrets`
 
@@ -89,6 +91,18 @@ O chatbot abre automaticamente no navegador.
 
 ---
 
+## 🎭 Personalizando o chatbot
+
+O comportamento do chatbot é definido pela constante `PERSONALIDADE`, no início do `codigo.py`. Ela é enviada para a IA como mensagem de sistema antes de toda conversa e não aparece no chat.
+
+Para mudar o tom das respostas, basta editar o texto. Por exemplo:
+
+```python
+PERSONALIDADE = "Você é um professor de programação paciente, que responde em português com exemplos de código."
+```
+
+---
+
 ## 📂 Estrutura do projeto
 
 ```text
@@ -107,6 +121,6 @@ chat-bot-ia/
 
 ## 🗺️ Próximas melhorias
 
-- [ ] Respostas em streaming (texto aparecendo aos poucos)
-- [ ] Personalidade configurável para o chatbot
+- [x] Respostas em streaming (texto aparecendo aos poucos)
+- [x] Personalidade configurável para o chatbot
 - [ ] Publicação online no Streamlit Community Cloud

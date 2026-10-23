@@ -15,6 +15,14 @@ modelo_ia = OpenAI(
 )
 
 
+# personalidade do chatbot: instrucao que a IA recebe antes de toda conversa
+PERSONALIDADE = (
+    "Você é um assistente simpático e direto, que responde sempre em português do Brasil. "
+    "Explique as coisas de forma simples, com exemplos quando ajudar, "
+    "e diga quando não souber algo em vez de inventar."
+)
+
+
 def pedacos_de_texto(resposta_ia):
     # devolve so o texto de cada pedaco da resposta, conforme ele chega
     for pedaco in resposta_ia:
@@ -64,7 +72,7 @@ if mensagem_usuario:
     # pegar a resposta da IA em streaming e mostrar no chat conforme ela chega
     try:
         resposta_ia = modelo_ia.chat.completions.create(
-            messages=st.session_state["lista_mensagens"],
+            messages=[{"role": "system", "content": PERSONALIDADE}] + st.session_state["lista_mensagens"],
             model="gemini-flash-lite-latest",
             stream=True
         )

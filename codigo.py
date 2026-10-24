@@ -9,6 +9,10 @@ import streamlit as st
 from openai import OpenAI
 
 
+# configurar a aba do navegador (titulo e icone)
+st.set_page_config(page_title="Chatbot de IA", page_icon="🤖")
+
+
 modelo_ia = OpenAI(
     api_key=st.secrets["GEMINI_API_KEY"],
     base_url="https://generativelanguage.googleapis.com/v1beta/openai"

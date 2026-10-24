@@ -49,6 +49,11 @@ with st.sidebar:
 mensagem_usuario = st.chat_input("Escreva sua mensagem aqui")
 
 
+# mensagem de boas-vindas enquanto a conversa estiver vazia
+if not st.session_state["lista_mensagens"] and not mensagem_usuario:
+    st.chat_message("assistant").write("Olá! Sou o seu assistente de IA. Pode me perguntar qualquer coisa.")
+
+
 # mostrar historico de mensagens
 for mensagem in st.session_state["lista_mensagens"]:
     quem_enviou = mensagem["role"]

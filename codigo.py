@@ -9,8 +9,8 @@ st.set_page_config(page_title="Chatbot de IA", page_icon="🤖")
 modelo_ia = OpenAI(
     api_key=st.secrets["GEMINI_API_KEY"],
     base_url="https://generativelanguage.googleapis.com/v1beta/openai",
-    timeout=30,      # espera no maximo 30 segundos pela resposta da IA
-    max_retries=1,   # tenta de novo so uma vez se der erro
+    timeout=90,      # espera no maximo 90 segundos pela resposta da IA
+    max_retries=0,   # se der erro, avisa na hora em vez de tentar de novo
 )
 
 
@@ -138,13 +138,15 @@ if mensagem_usuario:
     instrucoes = {"role": "system", "content": montar_instrucoes(modo, vaga, tipo)}
 
     try:
-        resposta_ia = modelo_ia.chat.completions.create(
-            messages=[instrucoes] + st.session_state["lista_mensagens"],
-            model="gemini-flash-lite-latest",
-            stream=True
-        )
-
         with st.chat_message("assistant", avatar=AVATARES["assistant"]):
+            # mostra "Pensando..." enquanto a IA nao comeca a responder
+            with st.spinner("Pensando..."):
+                resposta_ia = modelo_ia.chat.completions.create(
+                    messages=[instrucoes] + st.session_state["lista_mensagens"],
+                    model="gemini-flash-lite-latest",
+                    stream=True
+                )
+
             resposta_modelo = st.write_stream(pedacos_de_texto(resposta_ia))
     except Exception as erro:
         # tira a mensagem do usuario do historico para ele poder tentar de novo

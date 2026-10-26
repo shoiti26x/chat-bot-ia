@@ -1,36 +1,38 @@
-# 🤖 Chatbot de IA
+# 🎯 Simulador de Entrevista Técnica
 
-Chatbot de Inteligência Artificial desenvolvido com **Python**, **Streamlit** e **Google Gemini**.
+Aplicação em **Python** que usa Inteligência Artificial (**Google Gemini**) para simular entrevistas técnicas de estágio. O candidato escolhe a área e o nível, responde às perguntas no chat e recebe nota, comentários e uma resposta modelo a cada pergunta.
 
-Este projeto começou como a **primeira versão (v1.0.0)** de um chatbot desenvolvido durante meus estudos de Python, APIs e Inteligência Artificial, e está evoluindo para a **v1.1.0**.
-
-A ideia é começar com uma aplicação simples e evoluí-la gradualmente, adicionando novas funcionalidades, melhorias na interface e novas integrações com modelos de IA.
-
-> 🚧 Projeto em desenvolvimento.
+> 🚧 Projeto em desenvolvimento contínuo.
 
 ---
 
 ## 📌 Sobre o projeto
 
-O chatbot permite que o usuário envie mensagens através de uma interface de conversa e receba respostas geradas pelo **Google Gemini**.
+Criei este projeto para treinar para as minhas próprias entrevistas de estágio.
 
-A aplicação utiliza o **Streamlit** para criar a interface web e a API do Gemini para realizar a comunicação com o modelo de Inteligência Artificial.
-
-O histórico das mensagens é mantido durante a sessão para que a conversa tenha continuidade.
+Ele começou como um chatbot genérico (v1.0.0) e foi evoluindo aos poucos: histórico de conversa, tratamento de erros, respostas em streaming e personalidade configurável. Com essa base pronta, transformei o chatbot em um entrevistador, usando uma mensagem de sistema que define as regras da entrevista.
 
 ---
 
 ## ✨ Funcionalidades
 
-- 💬 Interface de conversa
-- 🤖 Respostas geradas por Inteligência Artificial
-- 🧠 Histórico de mensagens durante a sessão
-- 🧹 Botão para limpar a conversa
-- ⚠️ Mensagem amigável quando a API falha
+- 🎯 Entrevista em 6 áreas: Python, Java, SQL e Banco de Dados, Git e GitHub, Lógica de Programação e Comportamental (RH)
+- 📈 Três níveis de dificuldade: Iniciante, Estágio e Júnior
+- 📝 Nota de 0 a 10, comentários e resposta modelo a cada resposta
+- 💡 Dicas sem entregar a resposta, quando o candidato pede
 - ⚡ Respostas em streaming (o texto aparece em tempo real, conforme é gerado)
-- 🎭 Personalidade configurável por meio de uma mensagem de sistema
-- 🔌 Integração com Google Gemini
-- 🔐 Proteção da API Key utilizando `st.secrets`
+- 🔄 Nova entrevista com um clique, ou automaticamente ao trocar a área ou o nível
+- ⚠️ Mensagem amigável quando a API falha
+- 🔐 Chave da API protegida com `st.secrets`
+
+---
+
+## 🧠 Como funciona
+
+1. O candidato escolhe a área e o nível na barra lateral.
+2. A função `montar_instrucoes` gera uma **mensagem de sistema** com as regras da entrevista para aquela área e nível. Ela é enviada para a IA antes da conversa e não aparece no chat.
+3. A cada resposta do candidato, o app envia para a API a mensagem de sistema e **todo o histórico da conversa**, guardado em `st.session_state`. É assim que a IA "lembra" das perguntas anteriores, já que ela não guarda memória entre as chamadas.
+4. A resposta da IA chega em pedaços (streaming) e é mostrada na tela conforme é gerada.
 
 ---
 
@@ -39,11 +41,10 @@ O histórico das mensagens é mantido durante a sessão para que a conversa tenh
 | Tecnologia | Utilização |
 |---|---|
 | Python | Linguagem principal |
-| Streamlit | Criação da interface web |
+| Streamlit | Interface web |
 | Google Gemini | Modelo de Inteligência Artificial |
-| OpenAI Python SDK | Comunicação com a API compatível |
-| Git | Controle de versão |
-| GitHub | Hospedagem do código |
+| OpenAI Python SDK | Comunicação com a API do Gemini (formato compatível com a OpenAI) |
+| Git e GitHub | Controle de versão e hospedagem do código |
 
 ---
 
@@ -81,25 +82,13 @@ GEMINI_API_KEY = "sua-chave-aqui"
 
 Esse arquivo está no `.gitignore` e nunca é enviado ao GitHub.
 
-**5. Rode o chatbot**
+**5. Rode a aplicação**
 
 ```bash
 streamlit run codigo.py
 ```
 
-O chatbot abre automaticamente no navegador.
-
----
-
-## 🎭 Personalizando o chatbot
-
-O comportamento do chatbot é definido pela constante `PERSONALIDADE`, no início do `codigo.py`. Ela é enviada para a IA como mensagem de sistema antes de toda conversa e não aparece no chat.
-
-Para mudar o tom das respostas, basta editar o texto. Por exemplo:
-
-```python
-PERSONALIDADE = "Você é um professor de programação paciente, que responde em português com exemplos de código."
-```
+A aplicação abre automaticamente no navegador. Escolha a área e o nível e escreva **começar**.
 
 ---
 
@@ -109,10 +98,11 @@ PERSONALIDADE = "Você é um professor de programação paciente, que responde e
 chat-bot-ia/
 │
 ├── .streamlit/
+│   ├── config.toml       # tema de cores da interface
 │   └── secrets.toml      # chave da API (não versionado)
 │
 ├── .gitignore
-├── codigo.py             # código do chatbot
+├── codigo.py             # código da aplicação
 ├── requirements.txt      # dependências
 └── README.md
 ```
@@ -121,6 +111,6 @@ chat-bot-ia/
 
 ## 🗺️ Próximas melhorias
 
-- [x] Respostas em streaming (texto aparecendo aos poucos)
-- [x] Personalidade configurável para o chatbot
 - [ ] Publicação online no Streamlit Community Cloud
+- [ ] Relatório final da entrevista, com a nota média e os pontos a melhorar
+- [ ] Salvar o histórico de entrevistas para acompanhar a evolução

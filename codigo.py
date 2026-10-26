@@ -8,7 +8,9 @@ st.set_page_config(page_title="Chatbot de IA", page_icon="🤖")
 
 modelo_ia = OpenAI(
     api_key=st.secrets["GEMINI_API_KEY"],
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai"
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai",
+    timeout=30,      # espera no maximo 30 segundos pela resposta da IA
+    max_retries=1,   # tenta de novo so uma vez se der erro
 )
 
 

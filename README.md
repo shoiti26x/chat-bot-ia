@@ -3,7 +3,7 @@
 Chatbot de Inteligência Artificial em **Python**, com interface em **Streamlit** e respostas geradas pelo **Google Gemini**. Ele tem dois modos de uso:
 
 - **🤖 Assistente geral**: conversa sobre qualquer assunto.
-- **🎯 Simulador de entrevista**: faz perguntas de entrevista técnica de estágio, corrige as respostas e dá nota.
+- **🎯 Simulador de entrevista**: simula uma entrevista de emprego para a vaga que você digitar, corrige as respostas e dá nota.
 
 > 🚧 Projeto em desenvolvimento contínuo.
 
@@ -20,11 +20,11 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 ## ✨ Funcionalidades
 
 - 🔀 Dois modos de uso, escolhidos na barra lateral
-- 🎯 Simulador com 6 áreas (Python, Java, SQL e Banco de Dados, Git e GitHub, Lógica de Programação e Comportamental/RH) e 3 níveis (Iniciante, Estágio e Júnior)
+- 🎯 Simulador para qualquer vaga, digitada pelo usuário, com 3 tipos de entrevista: Mista, Técnica e Comportamental (RH)
 - 📝 No simulador: nota de 0 a 10, comentários e resposta modelo a cada resposta, e dicas sem entregar a resposta
 - 🧠 Histórico da conversa durante a sessão
 - ⚡ Respostas em streaming (o texto aparece em tempo real, conforme é gerado)
-- 🔄 Nova conversa com um clique, ou automaticamente ao trocar o modo, a área ou o nível
+- 🔄 Nova conversa com um clique, ou automaticamente ao trocar o modo, a vaga ou o tipo de entrevista
 - ⚠️ Mensagem amigável quando a API falha
 - 🔐 Chave da API protegida com `st.secrets`
 
@@ -32,7 +32,7 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 
 ## 🧠 Como funciona
 
-1. O usuário escolhe o modo na barra lateral e, no simulador, também a área e o nível.
+1. O usuário escolhe o modo na barra lateral e, no simulador, também digita a vaga e escolhe o tipo de entrevista.
 2. A função `montar_instrucoes` gera a **mensagem de sistema** de acordo com essas escolhas. Ela é enviada para a IA antes da conversa e não aparece no chat.
 3. A cada mensagem, o app envia para a API a mensagem de sistema e **todo o histórico da conversa**, guardado em `st.session_state`. É assim que a IA "lembra" do que foi dito antes, já que ela não guarda memória entre as chamadas.
 4. A resposta da IA chega em pedaços (streaming) e é mostrada na tela conforme é gerada.
@@ -91,7 +91,7 @@ Esse arquivo está no `.gitignore` e nunca é enviado ao GitHub.
 streamlit run codigo.py
 ```
 
-A aplicação abre automaticamente no navegador. No modo simulador, escolha a área e o nível e escreva **começar**.
+A aplicação abre automaticamente no navegador. No modo simulador, digite a vaga, escolha o tipo de entrevista e escreva **começar**.
 
 ---
 

@@ -16,19 +16,11 @@ modelo_ia = OpenAI(
 MODO_ASSISTENTE = "Assistente geral"
 MODO_ENTREVISTA = "Simulador de entrevista"
 
-# opcoes do simulador de entrevista
-AREAS = [
-    "Python",
-    "Java",
-    "SQL e Banco de Dados",
-    "Git e GitHub",
-    "Lógica de Programação",
-    "Comportamental (RH)",
-]
-NIVEIS = ["Iniciante", "Estágio", "Júnior"]
+# tipos de entrevista do simulador
+TIPOS_ENTREVISTA = ["Mista", "Técnica", "Comportamental (RH)"]
 
 
-def montar_instrucoes(modo, area, nivel):
+def montar_instrucoes(modo, vaga, tipo):
     # mensagem de sistema: define como a IA se comporta em cada modo
     if modo == MODO_ASSISTENTE:
         return (
@@ -38,9 +30,12 @@ def montar_instrucoes(modo, area, nivel):
         )
 
     return (
-        "Você é um entrevistador técnico experiente, conduzindo uma entrevista "
-        f"para uma vaga de estágio em tecnologia. Área: {area}. Nível do candidato: {nivel}.\n\n"
+        "Você é um entrevistador experiente, conduzindo uma entrevista de emprego "
+        f"para a vaga: {vaga}. Tipo de entrevista: {tipo}.\n\n"
         "Regras:\n"
+        "- Adapte as perguntas à vaga. Na entrevista técnica, pergunte sobre os conhecimentos "
+        "da área. Na comportamental, pergunte sobre experiências, trabalho em equipe e motivação. "
+        "Na mista, alterne entre os dois tipos.\n"
         "- Faça uma pergunta por vez e espere a resposta do candidato.\n"
         "- Depois de cada resposta, dê uma **Nota** de 0 a 10, diga o que ficou bom, "
         "o que faltou e mostre uma resposta modelo curta. Em seguida, faça a próxima pergunta.\n"
@@ -66,18 +61,19 @@ with st.sidebar:
     st.header("Configurações")
     modo = st.radio("Modo", [MODO_ASSISTENTE, MODO_ENTREVISTA])
 
-    # area e nivel so aparecem no simulador de entrevista
-    area = None
-    nivel = None
+    # vaga e tipo so aparecem no simulador de entrevista
+    vaga = None
+    tipo = None
     if modo == MODO_ENTREVISTA:
-        area = st.selectbox("Área", AREAS)
-        nivel = st.radio("Nível", NIVEIS, index=1)
+        vaga_digitada = st.text_input("Vaga", placeholder="Ex.: Estágio em desenvolvimento")
+        vaga = vaga_digitada.strip() or "uma vaga de estágio"
+        tipo = st.radio("Tipo de entrevista", TIPOS_ENTREVISTA)
 
     if st.button("Nova conversa"):
         st.session_state["lista_mensagens"] = []
 
-# se o usuario trocar o modo, a area ou o nivel, comeca uma conversa nova
-configuracao_atual = (modo, area, nivel)
+# se o usuario trocar o modo, a vaga ou o tipo, comeca uma conversa nova
+configuracao_atual = (modo, vaga, tipo)
 if st.session_state.get("configuracao") != configuracao_atual:
     st.session_state["configuracao"] = configuracao_atual
     st.session_state["lista_mensagens"] = []
@@ -90,10 +86,10 @@ if modo == MODO_ASSISTENTE:
     campo_texto = "Escreva sua mensagem aqui"
     avatar_ia = "🤖"
 else:
-    subtitulo = "Treine para entrevistas de estágio com uma IA que pergunta, corrige e dá nota."
+    subtitulo = "Treine para entrevistas de emprego com uma IA que pergunta, corrige e dá nota."
     boas_vindas = (
-        f"Olá! Vou ser seu entrevistador de **{area}**, nível **{nivel}**. "
-        "Quando estiver pronto, escreva **começar**."
+        f"Olá! Vou ser seu entrevistador para **{vaga}**, em uma entrevista **{tipo}**. "
+        "Para mudar a vaga, use a barra lateral. Quando estiver pronto, escreva **começar**."
     )
     campo_texto = "Escreva sua resposta aqui"
     avatar_ia = "🧑‍💼"
@@ -137,7 +133,7 @@ if mensagem_usuario:
 
 
     # pegar a resposta da IA em streaming e mostrar no chat conforme ela chega
-    instrucoes = {"role": "system", "content": montar_instrucoes(modo, area, nivel)}
+    instrucoes = {"role": "system", "content": montar_instrucoes(modo, vaga, tipo)}
 
     try:
         resposta_ia = modelo_ia.chat.completions.create(

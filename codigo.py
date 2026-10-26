@@ -3,7 +3,7 @@ from openai import OpenAI
 
 
 # configurar a aba do navegador (titulo e icone)
-st.set_page_config(page_title="Simulador de Entrevista", page_icon="🎯")
+st.set_page_config(page_title="Chatbot de IA", page_icon="🤖")
 
 
 modelo_ia = OpenAI(
@@ -12,7 +12,11 @@ modelo_ia = OpenAI(
 )
 
 
-# opcoes que o candidato pode escolher na barra lateral
+# modos de uso do chatbot
+MODO_ASSISTENTE = "Assistente geral"
+MODO_ENTREVISTA = "Simulador de entrevista"
+
+# opcoes do simulador de entrevista
 AREAS = [
     "Python",
     "Java",
@@ -23,15 +27,16 @@ AREAS = [
 ]
 NIVEIS = ["Iniciante", "Estágio", "Júnior"]
 
-# icone de cada lado da conversa
-AVATARES = {
-    "user": "🙋",
-    "assistant": "🧑‍💼",
-}
 
+def montar_instrucoes(modo, area, nivel):
+    # mensagem de sistema: define como a IA se comporta em cada modo
+    if modo == MODO_ASSISTENTE:
+        return (
+            "Você é um assistente simpático e direto, que responde sempre em português do Brasil. "
+            "Explique as coisas de forma simples, com exemplos quando ajudar, "
+            "e diga quando não souber algo em vez de inventar."
+        )
 
-def montar_instrucoes(area, nivel):
-    # mensagem de sistema: define como a IA se comporta durante a entrevista
     return (
         "Você é um entrevistador técnico experiente, conduzindo uma entrevista "
         f"para uma vaga de estágio em tecnologia. Área: {area}. Nível do candidato: {nivel}.\n\n"
@@ -52,38 +57,62 @@ def pedacos_de_texto(resposta_ia):
             yield pedaco.choices[0].delta.content
 
 
-st.title("🎯 Simulador de Entrevista Técnica")
-st.caption("Treine para entrevistas de estágio com uma IA que pergunta, corrige e dá nota.")
-
 # criar historico de mensagens
 if "lista_mensagens" not in st.session_state:
     st.session_state.lista_mensagens = []
 
-# barra lateral com as configuracoes da entrevista
+# barra lateral com as configuracoes
 with st.sidebar:
-    st.header("Configurar entrevista")
-    area = st.selectbox("Área", AREAS)
-    nivel = st.radio("Nível", NIVEIS, index=1)
+    st.header("Configurações")
+    modo = st.radio("Modo", [MODO_ASSISTENTE, MODO_ENTREVISTA])
 
-    if st.button("Nova entrevista"):
+    # area e nivel so aparecem no simulador de entrevista
+    area = None
+    nivel = None
+    if modo == MODO_ENTREVISTA:
+        area = st.selectbox("Área", AREAS)
+        nivel = st.radio("Nível", NIVEIS, index=1)
+
+    if st.button("Nova conversa"):
         st.session_state["lista_mensagens"] = []
 
-# se o candidato trocar a area ou o nivel, comeca uma entrevista nova
-configuracao_atual = (area, nivel)
+# se o usuario trocar o modo, a area ou o nivel, comeca uma conversa nova
+configuracao_atual = (modo, area, nivel)
 if st.session_state.get("configuracao") != configuracao_atual:
     st.session_state["configuracao"] = configuracao_atual
     st.session_state["lista_mensagens"] = []
 
 
-mensagem_usuario = st.chat_input("Escreva sua resposta aqui")
-
-
-# mensagem de boas-vindas enquanto a entrevista nao comecou
-if not st.session_state["lista_mensagens"] and not mensagem_usuario:
-    st.chat_message("assistant", avatar=AVATARES["assistant"]).write(
+# textos e icones que mudam conforme o modo
+if modo == MODO_ASSISTENTE:
+    subtitulo = "Converse com uma IA sobre qualquer assunto."
+    boas_vindas = "Olá! Sou o seu assistente de IA. Pode me perguntar qualquer coisa."
+    campo_texto = "Escreva sua mensagem aqui"
+    avatar_ia = "🤖"
+else:
+    subtitulo = "Treine para entrevistas de estágio com uma IA que pergunta, corrige e dá nota."
+    boas_vindas = (
         f"Olá! Vou ser seu entrevistador de **{area}**, nível **{nivel}**. "
         "Quando estiver pronto, escreva **começar**."
     )
+    campo_texto = "Escreva sua resposta aqui"
+    avatar_ia = "🧑‍💼"
+
+AVATARES = {
+    "user": "🙋",
+    "assistant": avatar_ia,
+}
+
+
+st.title("🤖 Chatbot de IA")
+st.caption(subtitulo)
+
+mensagem_usuario = st.chat_input(campo_texto)
+
+
+# mensagem de boas-vindas enquanto a conversa estiver vazia
+if not st.session_state["lista_mensagens"] and not mensagem_usuario:
+    st.chat_message("assistant", avatar=AVATARES["assistant"]).write(boas_vindas)
 
 
 # mostrar historico de mensagens
@@ -96,7 +125,7 @@ for mensagem in st.session_state["lista_mensagens"]:
 
 if mensagem_usuario:
 
-    # exibir a mensagem do candidato na tela e guardar no historico
+    # exibir a mensagem do usuario na tela e guardar no historico
     st.chat_message("user", avatar=AVATARES["user"]).write(mensagem_usuario)
 
     mensagem1 = {
@@ -108,7 +137,7 @@ if mensagem_usuario:
 
 
     # pegar a resposta da IA em streaming e mostrar no chat conforme ela chega
-    instrucoes = {"role": "system", "content": montar_instrucoes(area, nivel)}
+    instrucoes = {"role": "system", "content": montar_instrucoes(modo, area, nivel)}
 
     try:
         resposta_ia = modelo_ia.chat.completions.create(

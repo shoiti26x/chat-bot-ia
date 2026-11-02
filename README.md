@@ -25,7 +25,8 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 - 🧠 Histórico da conversa durante a sessão
 - ⚡ Respostas em streaming (o texto aparece em tempo real, conforme é gerado)
 - 🔄 Nova conversa com um clique, ou automaticamente ao trocar o modo, a vaga ou o tipo de entrevista
-- ⚠️ Mensagem amigável quando a API falha
+- ⏳ Aviso de "Pensando..." enquanto a IA não começa a responder
+- ⚠️ Mensagem amigável quando a API falha, com tempo máximo de espera de 90 segundos para o app não ficar travado
 - 🔐 Chave da API protegida com `st.secrets`
 
 ---
@@ -36,6 +37,7 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 2. A função `montar_instrucoes` gera a **mensagem de sistema** de acordo com essas escolhas. Ela é enviada para a IA antes da conversa e não aparece no chat.
 3. A cada mensagem, o app envia para a API a mensagem de sistema e **todo o histórico da conversa**, guardado em `st.session_state`. É assim que a IA "lembra" do que foi dito antes, já que ela não guarda memória entre as chamadas.
 4. A resposta da IA chega em pedaços (streaming) e é mostrada na tela conforme é gerada.
+5. Se a API demorar mais de 90 segundos ou der erro, a mensagem do usuário é tirada do histórico e o app mostra um aviso, para a pessoa poder tentar de novo sem duplicar a pergunta.
 
 ---
 

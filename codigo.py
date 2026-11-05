@@ -21,6 +21,11 @@ MODO_ENTREVISTA = "Simulador de entrevista"
 # tipos de entrevista do simulador
 TIPOS_ENTREVISTA = ["Mista", "Técnica", "Comportamental (RH)"]
 
+# quantas mensagens do historico vao para a IA a cada pergunta
+# conversas longas ficam lentas e caras, entao mandamos so as mais recentes:
+# as 10 ultimas trocas (pergunta + resposta) mais a pergunta atual = 21
+LIMITE_HISTORICO = 21
+
 
 def montar_instrucoes(modo, vaga, tipo):
     # mensagem de sistema: define como a IA se comporta em cada modo
@@ -142,7 +147,7 @@ if mensagem_usuario:
             # mostra "Pensando..." enquanto a IA nao comeca a responder
             with st.spinner("Pensando..."):
                 resposta_ia = modelo_ia.chat.completions.create(
-                    messages=[instrucoes] + st.session_state["lista_mensagens"],
+                    messages=[instrucoes] + st.session_state["lista_mensagens"][-LIMITE_HISTORICO:],
                     model="gemini-flash-lite-latest",
                     stream=True
                 )

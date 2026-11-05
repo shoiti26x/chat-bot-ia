@@ -22,7 +22,7 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 - 🔀 Dois modos de uso, escolhidos na barra lateral
 - 🎯 Simulador para qualquer vaga, digitada pelo usuário, com 3 tipos de entrevista: Mista, Técnica e Comportamental (RH)
 - 📝 No simulador: nota de 0 a 10, comentários e resposta modelo a cada resposta, e dicas sem entregar a resposta
-- 🧠 Histórico da conversa durante a sessão
+- 🧠 Histórico da conversa durante a sessão, com limite de mensagens enviadas à IA para manter as respostas rápidas
 - ⚡ Respostas em streaming (o texto aparece em tempo real, conforme é gerado)
 - 🔄 Nova conversa com um clique, ou automaticamente ao trocar o modo, a vaga ou o tipo de entrevista
 - ⏳ Aviso de "Pensando..." enquanto a IA não começa a responder
@@ -35,7 +35,7 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 
 1. O usuário escolhe o modo na barra lateral e, no simulador, também digita a vaga e escolhe o tipo de entrevista.
 2. A função `montar_instrucoes` gera a **mensagem de sistema** de acordo com essas escolhas. Ela é enviada para a IA antes da conversa e não aparece no chat.
-3. A cada mensagem, o app envia para a API a mensagem de sistema e **todo o histórico da conversa**, guardado em `st.session_state`. É assim que a IA "lembra" do que foi dito antes, já que ela não guarda memória entre as chamadas.
+3. A cada mensagem, o app envia para a API a mensagem de sistema e **as últimas 10 trocas de mensagens da conversa, mais a pergunta atual**, guardadas em `st.session_state`. É assim que a IA "lembra" do que foi dito antes, já que ela não guarda memória entre as chamadas. O limite evita que conversas longas fiquem lentas e caras, e pode ser ajustado na constante `LIMITE_HISTORICO`.
 4. A resposta da IA chega em pedaços (streaming) e é mostrada na tela conforme é gerada.
 5. Se a API demorar mais de 90 segundos ou der erro, a mensagem do usuário é tirada do histórico e o app mostra um aviso, para a pessoa poder tentar de novo sem duplicar a pergunta.
 

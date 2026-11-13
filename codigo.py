@@ -28,7 +28,11 @@ LIMITE_HISTORICO = 21
 
 
 def montar_instrucoes(modo, vaga, tipo):
-    # mensagem de sistema: define como a IA se comporta em cada modo
+    """Monta a mensagem de sistema, que define como a IA se comporta.
+
+    No modo assistente, devolve uma instrucao geral. No simulador, devolve as
+    regras da entrevista para a vaga e o tipo de entrevista escolhidos.
+    """
     if modo == MODO_ASSISTENTE:
         return (
             "Você é um assistente simpático e direto, que responde sempre em português do Brasil. "
@@ -53,7 +57,10 @@ def montar_instrucoes(modo, vaga, tipo):
 
 
 def pedacos_de_texto(resposta_ia):
-    # devolve so o texto de cada pedaco da resposta, conforme ele chega
+    """Gerador que entrega so o texto de cada pedaco da resposta, conforme ele chega.
+
+    Pula os pedacos sem texto, que a API as vezes manda so com informacao tecnica.
+    """
     for pedaco in resposta_ia:
         if pedaco.choices and pedaco.choices[0].delta.content:
             yield pedaco.choices[0].delta.content

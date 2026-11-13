@@ -116,6 +116,9 @@ chat-bot-ia/
 
 ## 🗺️ Próximas melhorias
 
+- [x] Limitar o histórico enviado à IA, para conversas longas não ficarem lentas e caras
+- [x] Aviso de carregamento e tempo máximo de espera pela resposta da IA
 - [ ] Publicação online no Streamlit Community Cloud
 - [ ] Relatório final da entrevista no simulador, com a nota média e os pontos a melhorar
 - [ ] Salvar o histórico de entrevistas para acompanhar a evolução
+- [ ] Modo de documentos: enviar um PDF e fazer perguntas sobre ele

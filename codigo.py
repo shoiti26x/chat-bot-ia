@@ -6,6 +6,20 @@ from openai import OpenAI
 st.set_page_config(page_title="Chatbot de IA", page_icon="🤖")
 
 
+# sem a chave da API o chatbot nao funciona: avisa como configurar em vez de quebrar
+try:
+    tem_chave = "GEMINI_API_KEY" in st.secrets
+except Exception:
+    # em algumas versoes do Streamlit, ler st.secrets sem o arquivo de segredos da erro
+    tem_chave = False
+
+if not tem_chave:
+    st.error(
+        "Chave da API não encontrada. Crie o arquivo `.streamlit/secrets.toml` "
+        'com a linha `GEMINI_API_KEY = "sua-chave-aqui"` e rode o app de novo.'
+    )
+    st.stop()
+
 modelo_ia = OpenAI(
     api_key=st.secrets["GEMINI_API_KEY"],
     base_url="https://generativelanguage.googleapis.com/v1beta/openai",

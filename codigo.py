@@ -131,7 +131,8 @@ AVATARES = {
 st.title("🤖 Chatbot de IA")
 st.caption(subtitulo)
 
-mensagem_usuario = st.chat_input(campo_texto)
+# limite de caracteres por mensagem, para evitar perguntas gigantes (lentas e caras)
+mensagem_usuario = st.chat_input(campo_texto, max_chars=2000)
 
 
 # mensagem de boas-vindas enquanto a conversa estiver vazia

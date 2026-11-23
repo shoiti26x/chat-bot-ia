@@ -27,7 +27,8 @@ Com essa base pronta, adicionei o **modo simulador de entrevista**, que criei pa
 - 🔄 Nova conversa com um clique, ou automaticamente ao trocar o modo, a vaga ou o tipo de entrevista
 - ⏳ Aviso de "Pensando..." enquanto a IA não começa a responder
 - ⚠️ Mensagem amigável quando a API falha, com tempo máximo de espera de 90 segundos para o app não ficar travado
-- 🔐 Chave da API protegida com `st.secrets`
+- ✏️ Limite de 2000 caracteres por mensagem
+- 🔐 Chave da API protegida com `st.secrets`, com aviso explicando como configurar quando ela não existe
 
 ---
 

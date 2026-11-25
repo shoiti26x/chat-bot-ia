@@ -40,6 +40,9 @@ TIPOS_ENTREVISTA = ["Mista", "Técnica", "Comportamental (RH)"]
 # as 10 ultimas trocas (pergunta + resposta) mais a pergunta atual = 21
 LIMITE_HISTORICO = 21
 
+# modelo de IA usado nas respostas
+MODELO = "gemini-flash-lite-latest"
+
 
 def montar_instrucoes(modo, vaga, tipo):
     """Monta a mensagem de sistema, que define como a IA se comporta.
@@ -170,7 +173,7 @@ if mensagem_usuario:
             with st.spinner("Pensando..."):
                 resposta_ia = modelo_ia.chat.completions.create(
                     messages=[instrucoes] + st.session_state["lista_mensagens"][-LIMITE_HISTORICO:],
-                    model="gemini-flash-lite-latest",
+                    model=MODELO,
                     stream=True
                 )
 

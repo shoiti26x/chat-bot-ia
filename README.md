@@ -107,7 +107,7 @@ Os principais ajustes ficam no `codigo.py`:
 | Como a IA se comporta em cada modo | função `montar_instrucoes` |
 | Quantas mensagens da conversa vão para a IA | constante `LIMITE_HISTORICO` |
 | Tempo máximo de espera pela resposta | `timeout` na criação do cliente `OpenAI` |
-| Modelo de IA usado | `model` na chamada `chat.completions.create` |
+| Modelo de IA usado | constante `MODELO` |
 
 Para criar um modo novo, basta acrescentar uma opção na barra lateral e um texto novo em `montar_instrucoes`: a lógica do chat continua a mesma.
 

@@ -113,7 +113,10 @@ if st.session_state.get("configuracao") != configuracao_atual:
 # textos e icones que mudam conforme o modo
 if modo == MODO_ASSISTENTE:
     subtitulo = "Converse com uma IA sobre qualquer assunto."
-    boas_vindas = "Olá! Sou o seu assistente de IA. Pode me perguntar qualquer coisa."
+    boas_vindas = (
+        "Olá! Sou o seu assistente de IA. Pode me perguntar qualquer coisa. "
+        "Para treinar para uma entrevista, troque o modo na barra lateral."
+    )
     campo_texto = "Escreva sua mensagem aqui"
     avatar_ia = "🤖"
 else:
